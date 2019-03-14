@@ -23,30 +23,6 @@
   become: yes
   tags: ohmyzsh
 
-- name: '[users] Generate default aliases'
-  template:
-    src: zsh/aliases.j2
-    dest: "{{ ohmyzsh_root_dir if item.user == 'root' else ohmyzsh_home_dir ~ item.user }}/.zsh/aliases"
-    mode: 0644
-    owner: "{{ item.user }}"
-    group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
-  when: "item.state is not defined or 'present'in item.state"
-  with_items: "{{ ohmyzsh_users }}"
-  become: yes
-  tags: ohmyzsh
-
-- name: '[users] Generate custom aliases'
-  template:
-    src: zsh/aliases.local.j2
-    dest: "{{ ohmyzsh_root_dir if item.user == 'root' else ohmyzsh_home_dir ~ item.user }}/.zsh/aliases.local"
-    mode: 0644
-    owner: "{{ item.user }}"
-    group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
-  when: "item.state is not defined or 'present'in item.state"
-  with_items: "{{ ohmyzsh_users }}"
-  become: yes
-  tags: ohmyzsh
-
 - name: '[users] Generate Powerlevel9k custom configuration'
   copy:
     src: omz_powerlevel9k.cfg
